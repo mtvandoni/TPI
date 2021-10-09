@@ -1,30 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Linq;
-using WebApplication1.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-
-
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class PersonaController : ControllerBase
+    public class UsuarioController : ControllerBase
 
     {
         private readonly IJwtAuthenticationService _authService;
         private readonly TPI_DBContext context;
 
-        public PersonaController(TPI_DBContext context, IJwtAuthenticationService authService)
+        public UsuarioController(TPI_DBContext context, IJwtAuthenticationService authService)
         {
-            this.context = context;
+             this.context = context;
             _authService = authService;
-
 
         }
 
@@ -32,14 +27,23 @@ namespace WebApplication1.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] Persona persona)
         {
-            var token = _authService.Authenticate(persona.NombreUsuario, persona.Password);
+            try {
+                var usuario = context.Personas.FirstOrDefault(p => p.Nombre == persona.Nombre && p.Password == persona.Password);
+                if (usuario != null) {
+                    var token = _authService.Authenticate(usuario.Nombre, usuario.Password);
 
-            if (token == null)
-            {
-                return Unauthorized();
+                    if (token == null) {
+                        return Unauthorized();
+                    }
+                    return Ok(token);
+                }
+                else {
+                    return BadRequest("Usuario no encontrado");
+                }
             }
-
-            return Ok(token);
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
         }
 
         [AllowAnonymous]
@@ -47,12 +51,10 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public ActionResult<string> Get()
         {
-            try
-            {
+            try {
                 return Ok(context.Personas.ToList());
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
         }
@@ -61,13 +63,11 @@ namespace WebApplication1.Controllers
         [HttpGet("{id}", Name = "getPersona")]
         public ActionResult Get(int id)
         {
-            try
-            {
+            try {
                 var persona = context.Personas.FirstOrDefault(p => p.Id == id);
                 return Ok(persona);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
         }
@@ -85,21 +85,17 @@ namespace WebApplication1.Controllers
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] Persona persona)
         {
-            try
-            {
-                if (persona.Id == id)
-                {
+            try {
+                if (persona.Id == id) {
                     context.Entry(persona).State = EntityState.Modified;
                     context.SaveChanges();
                     return CreatedAtRoute("Getpersona", new { id = persona.Id }, persona);
                 }
-                else
-                {
+                else {
                     return BadRequest();
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
         }
@@ -108,22 +104,18 @@ namespace WebApplication1.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            try
-            {
+            try {
                 var persona = context.Personas.FirstOrDefault(p => p.Id == id);
-                if (persona != null)
-                {
+                if (persona != null) {
                     context.Personas.Remove(persona);
                     context.SaveChanges();
                     return Ok(id);
                 }
-                else
-                {
+                else {
                     return BadRequest();
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
         }

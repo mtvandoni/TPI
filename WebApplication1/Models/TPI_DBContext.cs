@@ -70,13 +70,11 @@ namespace WebApplication1.Models
 
             modelBuilder.Entity<Cursadum>(entity =>
             {
-                entity.HasKey(e => new { e.IdCursada, e.CodCursada });
+                entity.HasKey(e => e.IdCursada);
 
                 entity.ToTable("cursada");
 
-                entity.Property(e => e.IdCursada)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("idCursada");
+                entity.Property(e => e.IdCursada).HasColumnName("idCursada");
 
                 entity.Property(e => e.CodCursada)
                     .HasMaxLength(30)
@@ -170,10 +168,10 @@ namespace WebApplication1.Models
                     .HasColumnName("avatar")
                     .IsFixedLength(true);
 
-                entity.Property(e => e.CodCursada)
+                entity.Property(e => e.Carrera)
                     .IsRequired()
-                    .HasMaxLength(30)
-                    .HasColumnName("codCursada")
+                    .HasMaxLength(50)
+                    .HasColumnName("carrera")
                     .IsFixedLength(true);
 
                 entity.Property(e => e.Descripcion)
@@ -200,27 +198,21 @@ namespace WebApplication1.Models
                     .HasColumnName("nombre")
                     .IsFixedLength(true);
 
-                entity.Property(e => e.NombreUsuario)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("nombreUsuario")
-                    .IsFixedLength(true);
-
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("password")
                     .IsFixedLength(true);
 
+                entity.HasOne(d => d.IdCursadaNavigation)
+                    .WithMany(p => p.Personas)
+                    .HasForeignKey(d => d.IdCursada)
+                    .HasConstraintName("FK_cursada_idCursada");
+
                 entity.HasOne(d => d.IdTipoNavigation)
                     .WithMany(p => p.Personas)
                     .HasForeignKey(d => d.IdTipo)
                     .HasConstraintName("FK_persona_tipoPersona");
-
-                entity.HasOne(d => d.Cursadum)
-                    .WithMany(p => p.Personas)
-                    .HasForeignKey(d => new { d.IdCursada, d.CodCursada })
-                    .HasConstraintName("FK_cursada_idCursada");
             });
 
             modelBuilder.Entity<Proyecto>(entity =>

@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Context\**" />
+    <Content Remove="Context\**" />
+    <EmbeddedResource Remove="Context\**" />
+    <None Remove="Context\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="appsettings.json~RFf51803c.TMP" />
   </ItemGroup>
 
@@ -12,10 +19,11 @@
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -24,7 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
+    <Folder Include="Models\" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
