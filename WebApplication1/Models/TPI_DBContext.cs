@@ -186,10 +186,16 @@ namespace WebApplication1.Models
 
                 entity.Property(e => e.IdTipo).HasColumnName("idTipo");
 
-                entity.Property(e => e.Mail)
+                entity.Property(e => e.MailInst)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .HasColumnName("mail")
+                    .HasColumnName("mailInst")
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.MailPersonal)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("mailPersonal")
                     .IsFixedLength(true);
 
                 entity.Property(e => e.Nombre)

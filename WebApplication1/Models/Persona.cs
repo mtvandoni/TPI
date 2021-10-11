@@ -15,7 +15,8 @@ namespace WebApplication1.Models
 
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string Mail { get; set; }
+        public string MailInst { get; set; }
+        public string MailPersonal { get; set; }
         public string Carrera { get; set; }
         public string Password { get; set; }
         public byte Edad { get; set; }
