@@ -15,8 +15,8 @@ namespace WebApplication1.Models
         public int IdCursada { get; set; }
         public string CodCursada { get; set; }
         public string Descripcion { get; set; }
-        public DateTime FechaInicio { get; set; }
-        public DateTime FechaFin { get; set; }
+        public DateTime? FechaInicio { get; set; }
+        public DateTime? FechaFin { get; set; }
 
         public virtual ICollection<Persona> Personas { get; set; }
     }

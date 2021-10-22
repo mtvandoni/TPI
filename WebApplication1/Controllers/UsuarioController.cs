@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -72,13 +73,25 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // POST api/<PersonaController>
         [HttpPost]
-        public ActionResult Post([FromBody] Persona persona)
+        public ActionResult Post([FromBody] Persona  persona)
         {
-            context.Personas.Add(persona);
-            context.SaveChanges();
-            return CreatedAtRoute("Getpersona", new { id = persona.Id }, persona);
+            try {
+                var usuario = context.Personas.FirstOrDefault(p => p.Dni == persona.Dni);
+                if (usuario != null) {
+                    return BadRequest("Usuario existente");
+                }
+                else {
+                    var cursada = context.Cursada.OrderByDescending(c => c.IdCursada).LastOrDefault();
+                    persona.IdCursada = cursada.IdCursada;
+                    context.Personas.Add(persona);
+                    context.SaveChanges();
+                    return CreatedAtRoute("Getpersona", new { id = persona.Id }, persona);
+                }
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/<PersonaController>/5
@@ -101,7 +114,7 @@ namespace WebApplication1.Controllers
         }
 
         // DELETE api/<PersonaController>/5
-        [HttpDelete("{id}")]
+      /*  [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             try {
@@ -118,6 +131,6 @@ namespace WebApplication1.Controllers
             catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
-        }
+        }*/
     }
 }

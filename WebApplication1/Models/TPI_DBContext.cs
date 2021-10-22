@@ -82,7 +82,6 @@ namespace WebApplication1.Models
                     .IsFixedLength(true);
 
                 entity.Property(e => e.Descripcion)
-                    .IsRequired()
                     .HasMaxLength(30)
                     .HasColumnName("descripcion")
                     .IsFixedLength(true);
@@ -163,40 +162,35 @@ namespace WebApplication1.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Avatar)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("avatar")
                     .IsFixedLength(true);
 
                 entity.Property(e => e.Carrera)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("carrera")
                     .IsFixedLength(true);
 
                 entity.Property(e => e.Descripcion)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("descripcion");
 
+                entity.Property(e => e.Dni).HasColumnName("DNI");
+
                 entity.Property(e => e.Edad).HasColumnName("edad");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(50)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.EmailUnlam)
+                    .HasMaxLength(50)
+                    .IsFixedLength(true);
 
                 entity.Property(e => e.IdCursada).HasColumnName("idCursada");
 
                 entity.Property(e => e.IdTipo).HasColumnName("idTipo");
-
-                entity.Property(e => e.MailInst)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("mailInst")
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.MailPersonal)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("mailPersonal")
-                    .IsFixedLength(true);
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
@@ -205,7 +199,6 @@ namespace WebApplication1.Models
                     .IsFixedLength(true);
 
                 entity.Property(e => e.Password)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("password")
                     .IsFixedLength(true);
