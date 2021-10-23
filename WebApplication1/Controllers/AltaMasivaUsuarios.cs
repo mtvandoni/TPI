@@ -43,12 +43,7 @@ namespace WebApplication1.Controllers
                     altaUsuariosFalla.Add(UsuarioNuevo);
                 }
             }
-            if (altaUsuariosFalla.Count == 0) {
-                return Ok("Los usuarios se dieron de alta exitosamente");
-            }
-            else {
-                return Ok(altaUsuariosFalla);
-            }
+              return Ok(altaUsuariosFalla);
         }
     }
 }

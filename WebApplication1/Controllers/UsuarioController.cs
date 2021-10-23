@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.DTO;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -24,19 +25,34 @@ namespace WebApplication1.Controllers
 
         }
 
+        public object PernosaDTO { get; private set; }
+
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] Persona persona)
         {
             try {
-                var usuario = context.Personas.FirstOrDefault(p => p.Nombre == persona.Nombre && p.Password == persona.Password);
+                var usuario = context.Personas.FirstOrDefault(p => p.EmailUnlam == persona.EmailUnlam && p.Password == persona.Password);
+
                 if (usuario != null) {
-                    var token = _authService.Authenticate(usuario.Nombre, usuario.Password);
+                    var token = _authService.Authenticate(usuario.EmailUnlam, usuario.Password);
 
                     if (token == null) {
                         return Unauthorized();
                     }
-                    return Ok(token);
+                    else {
+                        PersonaDTO usuarioDTO = new PersonaDTO();
+                            usuarioDTO.Id = usuario.Id;
+                            usuarioDTO.token = "Bearer "+ token;
+                            usuarioDTO.Nombre = usuario.Nombre;
+                            usuarioDTO.Dni = usuario.Dni;
+                            usuarioDTO.Email = usuario.Email;
+                            usuarioDTO.EmailUnlam = usuario.EmailUnlam;
+                            usuarioDTO.Carrera = usuario.Carrera;
+                            usuarioDTO.Avatar = usuario.Avatar;
+                            usuarioDTO.IdTipo = (int)usuario.IdTipo;
+                        return Ok(usuarioDTO);
+                    }
                 }
                 else {
                     return BadRequest("Usuario no encontrado");
@@ -90,7 +106,7 @@ namespace WebApplication1.Controllers
                 }
             }
             catch (Exception ex) {
-                return BadRequest(ex.Message);
+                return BadRequest("Error al insertar el registro, validar los datos requeridos");
             }
         }
 

@@ -23,8 +23,11 @@ namespace WebApplication1.Models
         public byte? Edad { get; set; }
         public string Descripcion { get; set; }
         public string Avatar { get; set; }
+
         public byte? IdTipo { get; set; }
         public int? IdCursada { get; set; }
+ 
+
 
         public virtual Cursadum IdCursadaNavigation { get; set; }
         public virtual TipoPersona IdTipoNavigation { get; set; }
