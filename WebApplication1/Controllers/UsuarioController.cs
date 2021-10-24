@@ -25,8 +25,6 @@ namespace WebApplication1.Controllers
 
         }
 
-        public object PernosaDTO { get; private set; }
-
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] Persona persona)
