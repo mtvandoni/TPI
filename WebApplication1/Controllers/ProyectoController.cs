@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -49,13 +50,47 @@ namespace WebApplication1.Controllers
 
         // POST api/<ProyectoController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult Post([FromBody] Proyecto proyecto)
         {
+            
+            try {
+                var pro = context.Proyectos.FirstOrDefault(p => p.IdProyecto == proyecto.IdProyecto);
+                if (pro != null) {
+                    return BadRequest("Proyecto existente");
+                }
+                else {
+                    
+                    string path = @"D:\Proyectos\"+ proyecto.Nombre;
+                    try {
+                        // Determina si el directorio existe
+                        if (Directory.Exists(path)) {
+                            Console.WriteLine("Directorio Existente.");
+                        }
+                        else {
+                            // Try to create the directory.
+                            DirectoryInfo di = Directory.CreateDirectory(path);
+                            Console.WriteLine("El Directorio fue creado correctamente en {0}.", Directory.GetCreationTime(path));
+                        }
+                    }
+                    catch (Exception e) {
+                        Console.WriteLine("The process failed: {0}", e.ToString());
+                    }
+
+                    proyecto.RutaFoto = path;
+                    context.Proyectos.Add(proyecto);
+                    context.SaveChanges();
+                    return CreatedAtRoute("Getproyecto", new { id = proyecto.IdProyecto }, proyecto);
+                }
+            }
+            catch (Exception ex) {
+                return BadRequest("Error al insertar el registro, validar los datos requeridos" + "[" + ex + "]");
+            }
+
         }
 
         // PUT api/<ProyectoController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Proyecto proyecto)
         {
         }
 
