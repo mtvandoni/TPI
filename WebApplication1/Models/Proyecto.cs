@@ -11,6 +11,7 @@ namespace WebApplication1.Models
         {
             Comentarios = new HashSet<Comentario>();
             Entregas = new HashSet<Entrega>();
+            Equipos = new HashSet<Equipo>();
             Reds = new HashSet<Red>();
         }
 
@@ -23,10 +24,13 @@ namespace WebApplication1.Models
         public string RutaVideo { get; set; }
         public int IdRed { get; set; }
         public int? IdTipoProyecto { get; set; }
+        public int? IdCategoria { get; set; }
 
+        public virtual Categorium IdCategoriaNavigation { get; set; }
         public virtual TipoProyect IdTipoProyectoNavigation { get; set; }
         public virtual ICollection<Comentario> Comentarios { get; set; }
         public virtual ICollection<Entrega> Entregas { get; set; }
+        public virtual ICollection<Equipo> Equipos { get; set; }
         public virtual ICollection<Red> Reds { get; set; }
     }
 }

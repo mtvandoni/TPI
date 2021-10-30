@@ -14,7 +14,9 @@ namespace WebApplication1.Models
 
         public int IdEquipo { get; set; }
         public string Nombre { get; set; }
+        public int? IdProyecto { get; set; }
 
+        public virtual Proyecto IdProyectoNavigation { get; set; }
         public virtual ICollection<EquipoPersona> EquipoPersonas { get; set; }
     }
 }

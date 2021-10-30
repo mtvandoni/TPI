@@ -17,6 +17,7 @@ namespace WebApplication1.Models
         {
         }
 
+        public virtual DbSet<Categorium> Categoria { get; set; }
         public virtual DbSet<Comentario> Comentarios { get; set; }
         public virtual DbSet<Cursadum> Cursada { get; set; }
         public virtual DbSet<Entrega> Entregas { get; set; }
@@ -29,9 +30,25 @@ namespace WebApplication1.Models
         public virtual DbSet<TipoProyect> TipoProyects { get; set; }
         public virtual DbSet<TipoRed> TipoReds { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Modern_Spanish_CI_AS");
+
+            modelBuilder.Entity<Categorium>(entity =>
+            {
+                entity.HasKey(e => e.IdCategoria);
+
+                entity.ToTable("categoria");
+
+                entity.Property(e => e.IdCategoria).HasColumnName("idCategoria");
+
+                entity.Property(e => e.Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnName("descripcion")
+                    .IsFixedLength(true);
+            });
 
             modelBuilder.Entity<Comentario>(entity =>
             {
@@ -125,11 +142,18 @@ namespace WebApplication1.Models
 
                 entity.Property(e => e.IdEquipo).HasColumnName("idEquipo");
 
+                entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
+
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(20)
                     .HasColumnName("nombre")
                     .IsFixedLength(true);
+
+                entity.HasOne(d => d.IdProyectoNavigation)
+                    .WithMany(p => p.Equipos)
+                    .HasForeignKey(d => d.IdProyecto)
+                    .HasConstraintName("FK_proyecto_id");
             });
 
             modelBuilder.Entity<EquipoPersona>(entity =>
@@ -230,6 +254,8 @@ namespace WebApplication1.Models
                     .IsUnicode(false)
                     .HasColumnName("descripcion");
 
+                entity.Property(e => e.IdCategoria).HasColumnName("idCategoria");
+
                 entity.Property(e => e.IdRed).HasColumnName("idRed");
 
                 entity.Property(e => e.IdTipoProyecto).HasColumnName("idTipoProyecto");
@@ -257,6 +283,11 @@ namespace WebApplication1.Models
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("rutaVideo");
+
+                entity.HasOne(d => d.IdCategoriaNavigation)
+                    .WithMany(p => p.Proyectos)
+                    .HasForeignKey(d => d.IdCategoria)
+                    .HasConstraintName("FK_categoria_idCategoria");
 
                 entity.HasOne(d => d.IdTipoProyectoNavigation)
                     .WithMany(p => p.Proyectos)
