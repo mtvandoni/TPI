@@ -30,7 +30,6 @@ namespace WebApplication1.Models
         public virtual DbSet<TipoProyect> TipoProyects { get; set; }
         public virtual DbSet<TipoRed> TipoReds { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Modern_Spanish_CI_AS");

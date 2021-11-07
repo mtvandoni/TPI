@@ -128,7 +128,7 @@ namespace WebApplication1.Controllers
         }
 
         // DELETE api/<PersonaController>/5
-      /*  [HttpDelete("{id}")]
+      [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             try {
@@ -145,6 +145,6 @@ namespace WebApplication1.Controllers
             catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
-        }*/
+        }
     }
 }
