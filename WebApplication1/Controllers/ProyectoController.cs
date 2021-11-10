@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,12 +37,12 @@ namespace WebApplication1.Controllers
         }
 
         // GET api/<ProyectoController>/5
-        [HttpGet("{id}", Name = "idProyecto")]
+        [HttpGet("{id}", Name = "getProyecto")]
         public ActionResult Get(int id)
         {
             try {
-                var proyecto = context.Proyectos.FirstOrDefault(p => p.IdProyecto == id);
-                return Ok(proyecto);
+                var persona = context.Proyectos.FirstOrDefault(p => p.IdProyecto == id);
+                return Ok(persona);
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message);
@@ -53,13 +53,15 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] Proyecto proyecto)
         {
+
             try {
                 var pro = context.Proyectos.FirstOrDefault(p => p.IdProyecto == proyecto.IdProyecto);
                 if (pro != null) {
                     return BadRequest("Proyecto existente");
                 }
                 else {
-                    string path = @"D:\Proyectos\"+ proyecto.Nombre;
+
+                    string path = @"D:\Proyectos\" + proyecto.Nombre;
                     try {
                         // Determina si el directorio existe
                         if (Directory.Exists(path)) {
@@ -84,6 +86,7 @@ namespace WebApplication1.Controllers
             catch (Exception ex) {
                 return BadRequest("Error al insertar el registro, validar los datos requeridos" + "[" + ex + "]");
             }
+
         }
 
         // PUT api/<ProyectoController>/5
@@ -94,7 +97,7 @@ namespace WebApplication1.Controllers
                 if (proyecto.IdProyecto == id) {
                     context.Entry(proyecto).State = EntityState.Modified;
                     context.SaveChanges();
-                    return CreatedAtRoute("Getproyecto", new { id = proyecto.IdProyecto}, proyecto);
+                    return CreatedAtRoute("Getproyecto", new { id = proyecto.IdProyecto }, proyecto);
                 }
                 else {
                     return BadRequest();
