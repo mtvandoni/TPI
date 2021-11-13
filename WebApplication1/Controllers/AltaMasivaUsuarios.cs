@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
+using WebApplication1.DTO;
+using WebApplication1.Mail;
 
 namespace WebApplication1.Controllers
 {
@@ -43,7 +45,16 @@ namespace WebApplication1.Controllers
                     altaUsuariosFalla.Add(UsuarioNuevo);
                 }
             }
-              return Ok(altaUsuariosFalla);
+
+            //List<Persona> mailAlumnos = new List<Persona>();
+            //var mailAlumnos = context.Personas.Where(p => p.IdCursada == cursada.IdCursada);
+            var mailAlumnos = context.Personas.FirstOrDefault(p => p.IdCursada == cursada.IdCursada);
+
+            EnviarMail enviar = new EnviarMail();
+            string mensaje = enviar.envio(mailAlumnos.EmailUnlam, mailAlumnos.Password);
+
+            return Ok(altaUsuariosFalla);
+
         }
     }
 }
