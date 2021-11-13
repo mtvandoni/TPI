@@ -96,7 +96,7 @@ namespace WebApplication1.Controllers
                     return BadRequest("Usuario existente");
                 }
                 else {
-                    var cursada = context.Cursada.OrderByDescending(c => c.IdCursada).LastOrDefault();
+                    var cursada = context.Cursada.OrderByDescending(c => c.IdCursada).FirstOrDefault();
                     persona.IdCursada = cursada.IdCursada;
                     context.Personas.Add(persona);
                     context.SaveChanges();

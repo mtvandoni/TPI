@@ -28,7 +28,7 @@ namespace WebApplication1.Controllers
         public ActionResult<string> Get()
         {
             try {
-                return Ok(context.Cursada.ToList());
+                return Ok(context.Cursada.OrderByDescending(c => c.IdCursada).FirstOrDefault());
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message);
