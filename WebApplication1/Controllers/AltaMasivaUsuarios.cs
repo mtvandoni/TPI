@@ -35,6 +35,10 @@ namespace WebApplication1.Controllers
                     if (usuario != null) {
                         usuario.IdCursada = cursada.IdCursada;
                         context.SaveChanges();
+
+                        //Envio de mail
+                        EnviarMail enviar = new EnviarMail();
+                        string mensaje = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password);
                     }
                     else {
                         UsuarioNuevo.IdCursada = cursada.IdCursada;
@@ -48,10 +52,11 @@ namespace WebApplication1.Controllers
 
             //List<Persona> mailAlumnos = new List<Persona>();
             //var mailAlumnos = context.Personas.Where(p => p.IdCursada == cursada.IdCursada);
-            var mailAlumnos = context.Personas.FirstOrDefault(p => p.IdCursada == cursada.IdCursada);
 
-            EnviarMail enviar = new EnviarMail();
-            string mensaje = enviar.envio(mailAlumnos.EmailUnlam, mailAlumnos.Password);
+            //var mailAlumnos = context.Personas.FirstOrDefault(p => p.IdCursada == cursada.IdCursada);
+            //EnviarMail enviar = new EnviarMail();
+
+            //string mensaje = enviar.envio(mailAlumnos.EmailUnlam, mailAlumnos.Password);
 
             return Ok(altaUsuariosFalla);
 
