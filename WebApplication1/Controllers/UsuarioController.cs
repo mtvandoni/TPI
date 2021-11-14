@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.DTO;
+using WebApplication1.Mail;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -100,6 +101,11 @@ namespace WebApplication1.Controllers
                     persona.IdCursada = cursada.IdCursada;
                     context.Personas.Add(persona);
                     context.SaveChanges();
+
+                    //Envio de mail
+                    EnviarMail enviar = new EnviarMail();
+                    string mensaje = enviar.envio(persona.EmailUnlam, persona.Password);
+
                     return CreatedAtRoute("Getpersona", new { id = persona.Id }, persona);
                 }
             }

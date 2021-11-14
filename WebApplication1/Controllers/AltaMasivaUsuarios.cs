@@ -49,17 +49,7 @@ namespace WebApplication1.Controllers
                     altaUsuariosFalla.Add(UsuarioNuevo);
                 }
             }
-
-            //List<Persona> mailAlumnos = new List<Persona>();
-            //var mailAlumnos = context.Personas.Where(p => p.IdCursada == cursada.IdCursada);
-
-            //var mailAlumnos = context.Personas.FirstOrDefault(p => p.IdCursada == cursada.IdCursada);
-            //EnviarMail enviar = new EnviarMail();
-
-            //string mensaje = enviar.envio(mailAlumnos.EmailUnlam, mailAlumnos.Password);
-
             return Ok(altaUsuariosFalla);
-
         }
     }
 }
