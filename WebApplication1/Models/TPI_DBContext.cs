@@ -23,12 +23,22 @@ namespace WebApplication1.Models
         public virtual DbSet<Entrega> Entregas { get; set; }
         public virtual DbSet<Equipo> Equipos { get; set; }
         public virtual DbSet<EquipoPersona> EquipoPersonas { get; set; }
+        public virtual DbSet<Novedad> Novedads { get; set; }
         public virtual DbSet<Persona> Personas { get; set; }
         public virtual DbSet<Proyecto> Proyectos { get; set; }
         public virtual DbSet<Red> Reds { get; set; }
         public virtual DbSet<TipoPersona> TipoPersonas { get; set; }
         public virtual DbSet<TipoProyect> TipoProyects { get; set; }
         public virtual DbSet<TipoRed> TipoReds { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=DESKTOP-B1FEAND\\SQLEXPRESS;Database=TPI_DB;Trusted_Connection=True;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -178,6 +188,39 @@ namespace WebApplication1.Models
                     .HasConstraintName("FK_person_id");
             });
 
+            modelBuilder.Entity<Novedad>(entity =>
+            {
+                entity.HasKey(e => e.IdNovedad);
+
+                entity.ToTable("novedad");
+
+                entity.Property(e => e.IdNovedad).HasColumnName("idNovedad");
+
+                entity.Property(e => e.Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.IdPersona).HasColumnName("idPersona");
+
+                entity.Property(e => e.RutaFoto)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("rutaFoto");
+
+                entity.Property(e => e.RutaVideo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("rutaVideo");
+
+                entity.HasOne(d => d.IdPersonaNavigation)
+                    .WithMany(p => p.Novedads)
+                    .HasForeignKey(d => d.IdPersona)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_idNovedad_id");
+            });
+
             modelBuilder.Entity<Persona>(entity =>
             {
                 entity.ToTable("persona");
@@ -249,7 +292,7 @@ namespace WebApplication1.Models
 
                 entity.Property(e => e.Descripcion)
                     .IsRequired()
-                    .HasMaxLength(200)
+                    .HasMaxLength(600)
                     .IsUnicode(false)
                     .HasColumnName("descripcion");
 
@@ -265,20 +308,23 @@ namespace WebApplication1.Models
                     .HasColumnName("nombre")
                     .IsFixedLength(true);
 
-                entity.Property(e => e.Repositorio)
+                entity.Property(e => e.PropuestaValor)
                     .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false)
+                    .HasColumnName("propuestaValor");
+
+                entity.Property(e => e.Repositorio)
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("repositorio");
 
                 entity.Property(e => e.RutaFoto)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("rutaFoto");
 
                 entity.Property(e => e.RutaVideo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("rutaVideo");

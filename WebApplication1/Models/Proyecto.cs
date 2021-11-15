@@ -18,11 +18,12 @@ namespace WebApplication1.Models
         public int IdProyecto { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
+        public string PropuestaValor { get; set; }
         public string Repositorio { get; set; }
-        public int CantMeGusta { get; set; }
+        public int? CantMeGusta { get; set; }
         public string RutaFoto { get; set; }
         public string RutaVideo { get; set; }
-        public int IdRed { get; set; }
+        public int? IdRed { get; set; }
         public int? IdTipoProyecto { get; set; }
         public int? IdCategoria { get; set; }
 
