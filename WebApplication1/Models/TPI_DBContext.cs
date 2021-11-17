@@ -36,7 +36,7 @@ namespace WebApplication1.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-B1FEAND\\SQLEXPRESS;Database=TPI_DB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=TPI_DB;Trusted_Connection=True;");
             }
         }
 
@@ -202,8 +202,6 @@ namespace WebApplication1.Models
                     .IsUnicode(false)
                     .HasColumnName("descripcion");
 
-                entity.Property(e => e.IdPersona).HasColumnName("idPersona");
-
                 entity.Property(e => e.RutaFoto)
                     .HasMaxLength(50)
                     .IsUnicode(false)
@@ -213,12 +211,6 @@ namespace WebApplication1.Models
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("rutaVideo");
-
-                entity.HasOne(d => d.IdPersonaNavigation)
-                    .WithMany(p => p.Novedads)
-                    .HasForeignKey(d => d.IdPersona)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_idNovedad_id");
             });
 
             modelBuilder.Entity<Persona>(entity =>

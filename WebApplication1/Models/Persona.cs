@@ -11,7 +11,6 @@ namespace WebApplication1.Models
         {
             Comentarios = new HashSet<Comentario>();
             EquipoPersonas = new HashSet<EquipoPersona>();
-            Novedads = new HashSet<Novedad>();
         }
 
         public int Id { get; set; }
@@ -31,6 +30,5 @@ namespace WebApplication1.Models
         public virtual TipoPersona IdTipoNavigation { get; set; }
         public virtual ICollection<Comentario> Comentarios { get; set; }
         public virtual ICollection<EquipoPersona> EquipoPersonas { get; set; }
-        public virtual ICollection<Novedad> Novedads { get; set; }
     }
 }
