@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.DTO;
 using WebApplication1.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -95,6 +96,31 @@ namespace WebApplication1.Controllers
         {
             try {
                 if (proyecto.IdProyecto == id) {
+                    context.Entry(proyecto).State = EntityState.Modified;
+                    context.SaveChanges();
+                    return CreatedAtRoute("Getproyecto", new { id = proyecto.IdProyecto }, proyecto);
+                }
+                else {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("MeGusta")]
+        public ActionResult MeGusta([FromBody] ProyectoDTO proyectoDTO)
+        {
+            try {
+                var proyecto = context.Proyectos.FirstOrDefault(p => p.IdProyecto == proyectoDTO.Id);
+                if (proyecto != null) {
+                    if (proyectoDTO.Equals('S')) {
+                        proyecto.CantMeGusta = proyecto.CantMeGusta + 1;
+                    }
+                    else {
+                        proyecto.CantMeGusta = proyecto.CantMeGusta - 1;
+                    }
                     context.Entry(proyecto).State = EntityState.Modified;
                     context.SaveChanges();
                     return CreatedAtRoute("Getproyecto", new { id = proyecto.IdProyecto }, proyecto);
