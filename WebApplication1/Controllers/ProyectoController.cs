@@ -115,7 +115,7 @@ namespace WebApplication1.Controllers
             try {
                 var proyecto = context.Proyectos.FirstOrDefault(p => p.IdProyecto == proyectoDTO.Id);
                 if (proyecto != null) {
-                    if (proyectoDTO.Equals('S')) {
+                    if (proyectoDTO.FlagMeGusta.Equals("SI")) {
                         proyecto.CantMeGusta = proyecto.CantMeGusta + 1;
                     }
                     else {
