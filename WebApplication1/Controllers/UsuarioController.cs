@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.DTO;
 using WebApplication1.Mail;
 using WebApplication1.Models;
+using WebApplication1.Utils;
 
 namespace WebApplication1.Controllers
 {
@@ -99,14 +100,18 @@ namespace WebApplication1.Controllers
                 else {
                     var cursada = context.Cursada.OrderByDescending(c => c.IdCursada).FirstOrDefault();
                     persona.IdCursada = cursada.IdCursada;
+
+                    PassWordRandom pass = new PassWordRandom();
+                    persona.Password = pass.RandomPassword();
+
                     context.Personas.Add(persona);
                     context.SaveChanges();
 
                     //Envio de mail
                     EnviarMail enviar = new EnviarMail();
-                    string mensaje = enviar.envio(persona.EmailUnlam, persona.Password);
+                    _ = enviar.envio(persona.EmailUnlam, persona.Password);
 
-                    return CreatedAtRoute("Getpersona", new { id = persona.Id }, persona);
+                     return Ok("integrantes Asignados correctamente");
                 }
             }
             catch (Exception ex) {
@@ -133,8 +138,59 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // PUT api/<PersonaController>/5
+        [HttpPut("RecuperarPass")]
+        public ActionResult RecuperarPass( [FromBody] Persona persona)
+        {
+            try {
+                var usuario = context.Personas.FirstOrDefault(p => p.EmailUnlam == persona.EmailUnlam);
+                if (usuario !=null) {
+                    PassWordRandom pass = new PassWordRandom();
+                    usuario.Password = pass.RandomPassword();
+
+                    context.Entry(usuario).State = EntityState.Modified;
+                    context.SaveChanges();
+
+                    //Envio de mail
+                    EnviarMail enviar = new EnviarMail();
+                    _ = enviar.envio(usuario.EmailUnlam, usuario.Password);
+
+                    return Ok("Password cambiada exitosamente");
+                }
+                else {
+                    return BadRequest("Error el mail no se encuentra registrado en la base");
+                }
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // PUT api/<PersonaController>/5
+        [HttpPut("ReenvioMail")]
+        public ActionResult ReenvioMail([FromBody] Persona persona)
+        {
+            try {
+                var usuario = context.Personas.FirstOrDefault(p => p.Dni == persona.Dni);
+                if (usuario != null) {
+
+                    //Envio de mail
+                    EnviarMail enviar = new EnviarMail();
+                    _ = enviar.envio(usuario.EmailUnlam, usuario.Password);
+
+                    return Ok("Mail Reenviado al correo: " + usuario.EmailUnlam + " usuario: "+ usuario.Nombre);
+                }
+                else {
+                    return BadRequest("Error el mail no se encuentra registrado en la base");
+                }
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // DELETE api/<PersonaController>/5
-      [HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             try {

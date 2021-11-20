@@ -8,10 +8,10 @@ namespace WebApplication1.Mail
 {
     public class EnviarMail
     {
-        public string envio(string correoDestino, string clave) 
+        public async Task envio(string correoDestino, string clave) 
         {
             string correoOrigen = "webtpi.tecnicaturas@gmail.com";
-            string mensaje = "";
+            //string mensaje = "";
             try{
                 SmtpMail obCorreo = new SmtpMail("TryIt");
                 obCorreo.From = correoOrigen;
@@ -26,14 +26,14 @@ namespace WebApplication1.Mail
                 obServer.ConnectType = SmtpConnectType.ConnectSSLAuto;
 
                 SmtpClient obClient = new SmtpClient();
-                obClient.SendMail(obServer,obCorreo);
+                await obClient.SendMailAsync(obServer, obCorreo);
 
-                mensaje = "ok";
-                return mensaje;
+                //mensaje = "ok";
+                //return mensaje;
 
             }catch (Exception ex) {
-                mensaje = "error";
-                return mensaje;
+               // mensaje = "error";
+                //return mensaje;
             }
         }
     }
