@@ -12,37 +12,36 @@ namespace WebApplication1.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class NovedadController : ControllerBase
+    public class RedesSocialesController : ControllerBase
     {
-
         private readonly TPI_DBContext context;
 
-        public NovedadController(TPI_DBContext context)
+        public RedesSocialesController(TPI_DBContext context)
         {
             this.context = context;
-
         }
 
         [AllowAnonymous]
-        // GET: api/<NovedadController>
+        // GET: api/<RedesSocialesController>
         [HttpGet]
         public ActionResult<string> Get()
         {
             try {
-                return Ok(context.Novedads.ToList());
+                return Ok(context.Reds.ToList());
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
         }
 
-        // GET api/<NovedadController>/5
-        [HttpGet("{id}", Name = "getnovedad")]
+        [AllowAnonymous]
+        // GET api/<RedesSocialesController>/5
+        [HttpGet("{id}", Name = "getredesSociales")]
         public ActionResult Get(int id)
         {
             try {
-                var novedad = context.Novedads.FirstOrDefault(p => p.IdNovedad == id);
-                return Ok(novedad);
+                var red = context.Reds.FirstOrDefault(p => p.IdRed == id);
+                return Ok(red);
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message);
@@ -50,17 +49,17 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Novedad novedad)
+        public ActionResult Post([FromBody] Red red)
         {
             try {
-                var novedadExist = context.Novedads.FirstOrDefault(p => p.IdNovedad == novedad.IdNovedad);
-                if (novedadExist != null) {
-                    return BadRequest("Novedad existente");
+                var redSocialExist = context.Reds.FirstOrDefault(p => p.IdRed == red.IdRed && p.IdProyecto == red.IdProyecto);
+                if (redSocialExist != null) {
+                    return BadRequest("Relacion Red - Proyecto existente");
                 }
                 else {
-                    context.Novedads.Add(novedad);
+                    context.Reds.Add(red);
                     context.SaveChanges();
-                    return CreatedAtRoute("Getnovedad", new { id = novedad.IdNovedad}, novedad);
+                    return CreatedAtRoute("getredesSociales", new { id = red.IdRed }, red);
                 }
             }
             catch (Exception ex) {
@@ -68,15 +67,14 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // PUT api/<NovedadController>/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Novedad novedad)
+        public ActionResult Put(int id, [FromBody] Red red)
         {
             try {
-                if (novedad.IdNovedad == id) {
-                    context.Entry(novedad).State = EntityState.Modified;
+                if (red.IdRed == id ) {
+                    context.Entry(red).State = EntityState.Modified;
                     context.SaveChanges();
-                    return CreatedAtRoute("Getentrega", new { id = novedad.IdNovedad }, novedad);
+                    return CreatedAtRoute("GetredesSociales", new { id = red.IdRed }, red);
                 }
                 else {
                     return BadRequest();
@@ -87,16 +85,16 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // DELETE api/<NovedadController>/5
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        // DELETE api/<RedesSocialesController>/5
+        [HttpDelete]
+        public ActionResult Delete([FromBody] Red red)
         {
             try {
-                var novedad = context.Novedads.FirstOrDefault(p => p.IdNovedad == id);
-                if (novedad != null) {
-                    context.Novedads.Remove(novedad);
+                var redExist = context.Reds.FirstOrDefault(p => p.IdRed == red.IdRed && p.IdProyecto == red.IdProyecto);
+                if (redExist != null) {
+                    context.Reds.Remove(redExist);
                     context.SaveChanges();
-                    return Ok(id);
+                    return Ok("Se elimino la relacion");
                 }
                 else {
                     return BadRequest();

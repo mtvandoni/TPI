@@ -7,10 +7,14 @@ namespace WebApplication1.Models
 {
     public partial class TipoRed
     {
+        public TipoRed()
+        {
+            Reds = new HashSet<Red>();
+        }
+
         public int IdTipoRed { get; set; }
         public string Descripcion { get; set; }
-        public int IdRed { get; set; }
 
-        public virtual Red IdRedNavigation { get; set; }
+        public virtual ICollection<Red> Reds { get; set; }
     }
 }

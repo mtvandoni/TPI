@@ -349,11 +349,19 @@ namespace WebApplication1.Models
 
                 entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
 
+                entity.Property(e => e.IdTipoRed).HasColumnName("idTipoRed");
+
                 entity.HasOne(d => d.IdProyectoNavigation)
                     .WithMany(p => p.Reds)
                     .HasForeignKey(d => d.IdProyecto)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_proyecto_idProyecto");
+
+                entity.HasOne(d => d.IdTipoRedNavigation)
+                    .WithMany(p => p.Reds)
+                    .HasForeignKey(d => d.IdTipoRed)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_red_idTipoRed");
             });
 
             modelBuilder.Entity<TipoPersona>(entity =>
@@ -400,14 +408,6 @@ namespace WebApplication1.Models
                     .HasMaxLength(20)
                     .HasColumnName("descripcion")
                     .IsFixedLength(true);
-
-                entity.Property(e => e.IdRed).HasColumnName("idRed");
-
-                entity.HasOne(d => d.IdRedNavigation)
-                    .WithMany(p => p.TipoReds)
-                    .HasForeignKey(d => d.IdRed)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_red_idRed");
             });
 
             OnModelCreatingPartial(modelBuilder);
