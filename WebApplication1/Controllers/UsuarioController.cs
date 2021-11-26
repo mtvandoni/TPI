@@ -189,6 +189,26 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [HttpPut("CambioEstado")]
+        public ActionResult CambioEstado([FromBody] Persona persona)
+        {
+            try {
+                var usuario = context.Personas.FirstOrDefault(p => p.Id == persona.Id);
+                if (usuario == null) {
+                    return BadRequest("Usuario existente");
+                }
+                else {
+                    usuario.Estado = persona.Estado;
+                    context.Entry(usuario).State = EntityState.Modified;
+                    context.SaveChanges();
+                    return Ok("Usuario dado de baja correctamente");
+                }
+            }
+            catch (Exception ex) {
+                return BadRequest("Error al insertar el registro, validar los datos requeridos");
+            }
+        }
+
         // DELETE api/<PersonaController>/5
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)

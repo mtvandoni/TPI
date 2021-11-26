@@ -246,6 +246,13 @@ namespace WebApplication1.Models
                     .HasMaxLength(50)
                     .IsFixedLength(true);
 
+                entity.Property(e => e.Estado)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .HasColumnName("estado")
+                    .IsFixedLength(true);
+
                 entity.Property(e => e.IdCursada).HasColumnName("idCursada");
 
                 entity.Property(e => e.IdTipo).HasColumnName("idTipo");

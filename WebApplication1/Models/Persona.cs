@@ -16,6 +16,7 @@ namespace WebApplication1.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
         public int? Dni { get; set; }
+        public string Estado { get; set; }
         public string Email { get; set; }
         public string EmailUnlam { get; set; }
         public string Carrera { get; set; }

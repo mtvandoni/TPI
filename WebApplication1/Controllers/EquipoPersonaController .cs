@@ -87,6 +87,29 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [HttpPut("BajaPorEquipo")]
+        public ActionResult BajaPorEquipo([FromBody] EquipoPersona equipoPersona)
+        {
+            var personas = from per in context.Personas
+                           join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
+                           where equipoP.IdEquipo == equipoPersona.IdEquipo
+                           select per;
+                           
+            foreach (Persona persona in personas.ToList()) {
+                
+                try {
+                        persona.Estado = "N";
+                        context.Entry(persona).State = EntityState.Modified;
+                        context.SaveChanges();
+                    
+                }
+                catch (Exception ex) {
+                    return BadRequest("Error al dar de baja" + ex);
+                }
+            }
+                return Ok("Usuarios dados de baja");
+        }
+
         // PUT api/<EquipoController>/5
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] EquipoPersona EquipoPersona)
