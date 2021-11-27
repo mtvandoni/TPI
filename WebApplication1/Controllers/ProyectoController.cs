@@ -62,7 +62,7 @@ namespace WebApplication1.Controllers
                 }
                 else {
 
-                    proyecto.RutaFoto = proyecto.Nombre;
+                    proyecto.RutaFoto = proyecto.RutaFoto;
                     context.Proyectos.Add(proyecto);
                     context.SaveChanges();
                     return CreatedAtRoute("Getproyecto", new { id = proyecto.IdProyecto }, proyecto);
