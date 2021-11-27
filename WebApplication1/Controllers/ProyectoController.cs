@@ -62,23 +62,7 @@ namespace WebApplication1.Controllers
                 }
                 else {
 
-                    string path = @"D:\Proyectos\" + proyecto.Nombre;
-                    try {
-                        // Determina si el directorio existe
-                        if (Directory.Exists(path)) {
-                            Console.WriteLine("Directorio Existente.");
-                        }
-                        else {
-                            // Try to create the directory.
-                            DirectoryInfo di = Directory.CreateDirectory(path);
-                            Console.WriteLine("El Directorio fue creado correctamente en {0}.", Directory.GetCreationTime(path));
-                        }
-                    }
-                    catch (Exception e) {
-                        Console.WriteLine("The process failed: {0}", e.ToString());
-                    }
-
-                    proyecto.RutaFoto = path;
+                    proyecto.RutaFoto = proyecto.Nombre;
                     context.Proyectos.Add(proyecto);
                     context.SaveChanges();
                     return CreatedAtRoute("Getproyecto", new { id = proyecto.IdProyecto }, proyecto);
