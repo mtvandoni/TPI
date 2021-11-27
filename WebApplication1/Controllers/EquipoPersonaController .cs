@@ -65,7 +65,7 @@ namespace WebApplication1.Controllers
                 }
             }
             catch (Exception ex) {
-                return BadRequest("Error al insertar el registro, validar los datos requeridos");
+                return BadRequest("Error al insertar el registro, validar los datos requeridos: " + ex);
             }
         }
 
@@ -83,12 +83,12 @@ namespace WebApplication1.Controllers
                 return Ok("integrantes Asignados correctamente");
             }
             catch (Exception ex) {
-                return BadRequest("Error al insertar el registro, validar los datos requeridos");
+                return BadRequest("Error al insertar el registro, validar los datos requeridos: " + ex);
             }
         }
 
-        [HttpPut("BajaPorEquipo")]
-        public ActionResult BajaPorEquipo([FromBody] EquipoPersona equipoPersona)
+        [HttpPut("DeshabilitarEquipo")]
+        public ActionResult DeshabilitarEquipo([FromBody] EquipoPersona equipoPersona)
         {
             var personas = from per in context.Personas
                            join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
@@ -114,7 +114,37 @@ namespace WebApplication1.Controllers
                 context.Entry(equipo).State = EntityState.Modified;
                 context.SaveChanges();
             }
-            return Ok("Equipo /Usuarios dados de baja");
+            return Ok("Equipo /Usuarios deshabilitados");
+        }
+
+        [HttpPut("HabilitarEquipo")]
+        public ActionResult HabilitarEquipo([FromBody] EquipoPersona equipoPersona)
+        {
+            var personas = from per in context.Personas
+                           join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
+                           where equipoP.IdEquipo == equipoPersona.IdEquipo
+                           select per;
+
+            foreach (Persona persona in personas.ToList()) {
+
+                try {
+                    persona.Estado = "S";
+                    context.Entry(persona).State = EntityState.Modified;
+                    context.SaveChanges();
+
+                }
+                catch (Exception ex) {
+                    return BadRequest("Error al habilitar" + ex);
+                }
+            }
+
+            var equipo = context.Equipos.FirstOrDefault(p => p.IdEquipo == equipoPersona.IdEquipo);
+            if (equipo != null) {
+                equipo.Estado = "S";
+                context.Entry(equipo).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+            return Ok("Equipo /Usuarios habilitados");
         }
 
         // PUT api/<EquipoController>/5
