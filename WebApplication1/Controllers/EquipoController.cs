@@ -58,6 +58,7 @@ namespace WebApplication1.Controllers
                     return BadRequest("Equipo existente");
                 }
                 else {
+                    equipo.Estado = "S";
                     context.Equipos.Add(equipo);
                     context.SaveChanges();
                     return CreatedAtRoute("Getequipo", new { id = equipo.IdEquipo }, equipo);
@@ -102,11 +103,6 @@ namespace WebApplication1.Controllers
 
                     var equipo = context.Equipos.FirstOrDefault(p => p.IdEquipo == id);
                     if (equipo != null) {
-                        /*Proyecto proyecto = new Proyecto();
-                        proyecto.IdProyecto = (int)equipo.IdProyecto;
-                        
-                        context.Proyectos.Remove(proyecto);
-                        context.SaveChanges();*/
 
                         context.Equipos.Remove(equipo);
                         context.SaveChanges();

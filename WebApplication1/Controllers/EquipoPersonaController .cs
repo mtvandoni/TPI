@@ -107,7 +107,14 @@ namespace WebApplication1.Controllers
                     return BadRequest("Error al dar de baja" + ex);
                 }
             }
-                return Ok("Usuarios dados de baja");
+
+            var equipo = context.Equipos.FirstOrDefault(p => p.IdEquipo == equipoPersona.IdEquipo);
+            if (equipo != null) {
+                equipo.Estado = "N";
+                context.Entry(equipo).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+            return Ok("Equipo /Usuarios dados de baja");
         }
 
         // PUT api/<EquipoController>/5
