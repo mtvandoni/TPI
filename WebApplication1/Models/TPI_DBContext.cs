@@ -31,14 +31,7 @@ namespace WebApplication1.Models
         public virtual DbSet<TipoProyect> TipoProyects { get; set; }
         public virtual DbSet<TipoRed> TipoReds { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=TPI_DB;Trusted_Connection=True;");
-            }
-        }
+       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -150,6 +143,13 @@ namespace WebApplication1.Models
                 entity.ToTable("equipo");
 
                 entity.Property(e => e.IdEquipo).HasColumnName("idEquipo");
+
+                entity.Property(e => e.Estado)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .HasColumnName("estado")
+                    .IsFixedLength(true);
 
                 entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
 
