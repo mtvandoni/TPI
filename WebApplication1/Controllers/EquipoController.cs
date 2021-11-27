@@ -102,11 +102,11 @@ namespace WebApplication1.Controllers
 
                     var equipo = context.Equipos.FirstOrDefault(p => p.IdEquipo == id);
                     if (equipo != null) {
-                        Proyecto proyecto = new Proyecto();
+                        /*Proyecto proyecto = new Proyecto();
                         proyecto.IdProyecto = (int)equipo.IdProyecto;
                         
                         context.Proyectos.Remove(proyecto);
-                        context.SaveChanges();
+                        context.SaveChanges();*/
 
                         context.Equipos.Remove(equipo);
                         context.SaveChanges();

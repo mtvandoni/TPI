@@ -19,5 +19,6 @@ namespace WebApplication1.DTO
         public string Avatar { get; set; }
         public string token { get; set; }
         public int IdTipo { get; set; }
+        public string Estado { get; set; }
     }
 }

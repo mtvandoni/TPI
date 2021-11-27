@@ -51,6 +51,9 @@ namespace WebApplication1.Controllers
                             usuarioDTO.Carrera = usuario.Carrera;
                             usuarioDTO.Avatar = usuario.Avatar;
                             usuarioDTO.IdTipo = (int)usuario.IdTipo;
+                            usuarioDTO.Estado = usuario.Estado;
+                            usuarioDTO.Descripcion  = usuario.Descripcion;
+
                         return Ok(usuarioDTO);
                     }
                 }
@@ -189,8 +192,8 @@ namespace WebApplication1.Controllers
             }
         }
 
-        [HttpPut("CambioEstado")]
-        public ActionResult CambioEstado([FromBody] Persona persona)
+        [HttpPut("DeshabilitarUsuario")]
+        public ActionResult DeshabilitarUsuario([FromBody] Persona persona)
         {
             try {
                 var usuario = context.Personas.FirstOrDefault(p => p.Id == persona.Id);
@@ -198,14 +201,34 @@ namespace WebApplication1.Controllers
                     return BadRequest("Usuario existente");
                 }
                 else {
-                    usuario.Estado = persona.Estado;
+                    usuario.Estado = "N";
                     context.Entry(usuario).State = EntityState.Modified;
                     context.SaveChanges();
-                    return Ok("Usuario dado de baja correctamente");
+                    return Ok("Usuario deshabilitado correctamente");
                 }
             }
             catch (Exception ex) {
-                return BadRequest("Error al insertar el registro, validar los datos requeridos");
+                return BadRequest("Error al insertar el registro, validar los datos requeridos: " + ex.Message);
+            }
+        }
+
+        [HttpPut("HabilitarUsuario")]
+        public ActionResult HabilitarUsuario([FromBody] Persona persona)
+        {
+            try {
+                var usuario = context.Personas.FirstOrDefault(p => p.Id == persona.Id);
+                if (usuario == null) {
+                    return BadRequest("Usuario existente");
+                }
+                else {
+                    usuario.Estado = "S";
+                    context.Entry(usuario).State = EntityState.Modified;
+                    context.SaveChanges();
+                    return Ok("Usuario habilitado correctamente");
+                }
+            }
+            catch (Exception ex) {
+                return BadRequest("Error al insertar el registro, validar los datos requeridos: " + ex.Message);
             }
         }
 
