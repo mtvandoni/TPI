@@ -92,11 +92,26 @@ namespace WebApplication1.Controllers
         public ActionResult Delete(int id)
         {
             try {
-                var equipo = context.Equipos.FirstOrDefault(p => p.IdEquipo == id);
-                if (equipo != null) {
-                    context.Equipos.Remove(equipo);
-                    context.SaveChanges();
-                    return Ok(id);
+                var equipopersona = context.EquipoPersonas.Where(p => p.IdEquipo == id);
+
+                if (equipopersona != null) {
+                    foreach (EquipoPersona eq in equipopersona.ToList()) {
+                        context.EquipoPersonas.Remove(eq);
+                        context.SaveChanges();
+                    }
+
+                    var equipo = context.Equipos.FirstOrDefault(p => p.IdEquipo == id);
+                    if (equipo != null) {
+                        Proyecto proyecto = new Proyecto();
+                        proyecto.IdProyecto = (int)equipo.IdProyecto;
+                        
+                        context.Proyectos.Remove(proyecto);
+                        context.SaveChanges();
+
+                        context.Equipos.Remove(equipo);
+                        context.SaveChanges();
+                    }
+                    return Ok("Equipo eliminado correctamente");
                 }
                 else {
                     return BadRequest();
@@ -106,6 +121,5 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }
