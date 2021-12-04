@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using EASendMail;
 
@@ -8,10 +9,10 @@ namespace WebApplication1.Mail
 {
     public class EnviarMail
     {
-        public async Task envio(string correoDestino, string clave) 
+        public  async Task<String> envio(string correoDestino, string clave) 
         {
             string correoOrigen = "webtpi.tecnicaturas@gmail.com";
-            //string mensaje = "";
+            string mensaje = "";
             try{
                 SmtpMail obCorreo = new SmtpMail("TryIt");
                 obCorreo.From = correoOrigen;
@@ -23,17 +24,26 @@ namespace WebApplication1.Mail
                 obServer.User = correoOrigen;
                 obServer.Password = "web2021tpi";
                 obServer.Port = 587;
-                obServer.ConnectType = SmtpConnectType.ConnectSSLAuto;
+                obServer.ConnectType = SmtpConnectType.ConnectTryTLS;
 
                 SmtpClient obClient = new SmtpClient();
                 await obClient.SendMailAsync(obServer, obCorreo);
 
-                //mensaje = "ok";
-                //return mensaje;
+                return mensaje = "OK";
 
-            }catch (Exception ex) {
-               // mensaje = "error";
-                //return mensaje;
+            }catch (Exception exception) {
+                PropertyInfo[] properties = exception.GetType()
+                            .GetProperties();
+                List<string> fields = new List<string>();
+                foreach (PropertyInfo property in properties) {
+                    object value = property.GetValue(exception, null);
+                    fields.Add(String.Format(
+                                     "{0} = {1}",
+                                     property.Name,
+                                     value != null ? value.ToString() : String.Empty
+                    ));
+                }
+                return String.Join("\n", fields.ToArray());
             }
         }
     }

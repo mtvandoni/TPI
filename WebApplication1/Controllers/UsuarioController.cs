@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -112,13 +113,19 @@ namespace WebApplication1.Controllers
 
                     //Envio de mail
                     EnviarMail enviar = new EnviarMail();
-                    _ = enviar.envio(persona.EmailUnlam, persona.Password);
+                    Task<string> myTask = enviar.envio(persona.EmailUnlam, persona.Password);
+                    string mensaje = myTask.Result;
 
-                     return Ok("integrantes Asignados correctamente");
+                    if (mensaje.Equals("OK")) {
+                        return Ok("integrantes Asignados correctamente");
+                    }
+                    else {
+                        return BadRequest("Error al enviar Mail : " + mensaje);
+                    }
                 }
             }
             catch (Exception ex) {
-                return BadRequest("Error al insertar el registro, validar los datos requeridos");
+                return BadRequest("Error al insertar el registro, validar los datos requeridos : "+ ex);
             }
         }
 
