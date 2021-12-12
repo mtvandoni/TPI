@@ -23,7 +23,7 @@ namespace WebApplication1.Mail
                 SmtpMail obCorreo = new SmtpMail("TryIt");
                 obCorreo.From = Configuration["EmailSettings:correoOrigen"];
                 obCorreo.To = correoDestino;
-                if (!codCursada.Equals(null)) {
+                if (codCursada!="") {
                     obCorreo.Subject = Configuration["EmailSettings:SubjectAlta"] + "-" + codCursada;
                     obCorreo.TextBody = Configuration["EmailSettings:TextSaludo"] + nombre + Configuration["EmailSettings:TextBodyAlta"] +
                         "\nUsuario: " + correoDestino + 

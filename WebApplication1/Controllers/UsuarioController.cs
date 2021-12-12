@@ -166,7 +166,7 @@ namespace WebApplication1.Controllers
 
                     //Envio de mail
                     EnviarMail enviar = new EnviarMail(Configuration);
-                    Task<string> myTask = enviar.envio(usuario.EmailUnlam, usuario.Password, usuario.Nombre, null);
+                    Task<string> myTask = enviar.envio(usuario.EmailUnlam, usuario.Password, usuario.Nombre, "");
 
                     string mensaje = myTask.Result;
 
@@ -193,10 +193,11 @@ namespace WebApplication1.Controllers
             try {
                 var usuario = context.Personas.FirstOrDefault(p => p.Dni == persona.Dni);
                 if (usuario != null) {
+                    var cursada = context.Cursada.OrderByDescending(c => c.IdCursada).FirstOrDefault();
 
                     //Envio de mail
                     EnviarMail enviar = new EnviarMail(Configuration);
-                    Task<string> myTask = enviar.envio(usuario.EmailUnlam, usuario.Password, usuario.Nombre, null);
+                    Task<string> myTask = enviar.envio(usuario.EmailUnlam, usuario.Password, usuario.Nombre, cursada.CodCursada);
 
                     string mensaje = myTask.Result;
 

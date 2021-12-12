@@ -46,15 +46,7 @@ namespace WebApplication1.Controllers
 
                         //Envio de mail
                         EnviarMail enviar = new EnviarMail(Configuration);
-                        Task<string> myTask = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password, UsuarioNuevo.Nombre, cursada.CodCursada);
-                        string mensaje = myTask.Result;
-
-                        if (mensaje.Equals("OK")) {
-                            return Ok("integrantes Asignados correctamente");
-                        }
-                        else {
-                            return BadRequest("Error al enviar Mail : " + mensaje);
-                        }
+                        _ = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password, UsuarioNuevo.Nombre, cursada.CodCursada);
                     }
                     else {
                         UsuarioNuevo.IdCursada = cursada.IdCursada;
@@ -66,15 +58,7 @@ namespace WebApplication1.Controllers
 
                         //Envio de mail
                         EnviarMail enviar = new EnviarMail(Configuration);
-                        Task<string> myTask = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password, UsuarioNuevo.Nombre, cursada.CodCursada);
-                        string mensaje = myTask.Result;
-
-                        if (mensaje.Equals("OK")) {
-                            return Ok("integrantes Asignados correctamente");
-                        }
-                        else {
-                            return BadRequest("Error al enviar Mail : " + mensaje);
-                        }
+                        _ = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password, UsuarioNuevo.Nombre, cursada.CodCursada);
                     }
                 }catch (Exception ex) {
                     altaUsuariosFalla.Add(UsuarioNuevo);
