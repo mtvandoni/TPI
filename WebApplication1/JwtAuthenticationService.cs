@@ -9,15 +9,17 @@ namespace WebApplication1
     public  class JwtAuthenticationService: IJwtAuthenticationService
     {
         private readonly string _key;
+        private readonly string _Expytoken;
 
-        public JwtAuthenticationService(string key)
+        public JwtAuthenticationService(string key, string ExpyToken)
         {
             _key = key;
+            _Expytoken = ExpyToken;
         }
 
-        public string Authenticate(string username, string password) {
+        public string Authenticate(string mailUnlam, string password) {
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || username == "DEMO" || password == "123456") {
+            if (string.IsNullOrEmpty(mailUnlam) || string.IsNullOrEmpty(password)) {
 
                 return null;
             }
@@ -28,9 +30,9 @@ namespace WebApplication1
             {
                 Subject = new ClaimsIdentity( new Claim[] 
                 {
-                    new Claim(ClaimTypes.Name, username)
+                    new Claim(ClaimTypes.Email, mailUnlam)
                 }), 
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(Convert.ToDouble(_Expytoken)),
                 SigningCredentials = new SigningCredentials( new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
             };
 

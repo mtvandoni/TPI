@@ -4,27 +4,57 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using EASendMail;
+using Microsoft.Extensions.Configuration;
 
 namespace WebApplication1.Mail
 {
     public class EnviarMail
     {
-        public  async Task<String> envio(string correoDestino, string clave) 
+        private readonly IConfiguration Configuration;
+
+        public EnviarMail(IConfiguration configuration)
         {
-            string correoOrigen = "webtpi.tecnicaturas@gmail.com";
+            Configuration = configuration;
+        }
+        public  async Task<String> envio(string correoDestino, string clave,string nombre, string codCursada) 
+        {
             string mensaje = "";
             try{
                 SmtpMail obCorreo = new SmtpMail("TryIt");
-                obCorreo.From = correoOrigen;
+                obCorreo.From = Configuration["EmailSettings:correoOrigen"];
                 obCorreo.To = correoDestino;
-                obCorreo.Subject = "Alta WEB TPI";
-                obCorreo.TextBody = "Hola, bienvenido a WEB TPI, tu clave es " + clave;
+                if (!codCursada.Equals(null)) {
+                    obCorreo.Subject = Configuration["EmailSettings:SubjectAlta"] + "-" + codCursada;
+                    obCorreo.TextBody = Configuration["EmailSettings:TextSaludo"] + nombre + Configuration["EmailSettings:TextBodyAlta"] +
+                        "\nUsuario: " + correoDestino + 
+                        "\nPassword: " + clave +"\n" + Configuration["EmailSettings:UrlAcceso"];
+                }
+                else {
+                    obCorreo.Subject = Configuration["EmailSettings:SubjectRecuPass"];
+                    obCorreo.TextBody = Configuration["EmailSettings:TextBodyRecuPass"] + clave;
+                }
+                
+                SmtpServer obServer = new SmtpServer(Configuration["EmailSettings:SmtpServer"]);
+                obServer.User = Configuration["EmailSettings:correoOrigen"];
+                obServer.Password = Configuration["EmailSettings:Password"];
+                obServer.Port = Int32.Parse(Configuration["EmailSettings:Puerto"]);
 
-                SmtpServer obServer = new SmtpServer("smtp.gmail.com");
-                obServer.User = correoOrigen;
-                obServer.Password = "web2021tpi";
-                obServer.Port = 587;
-                obServer.ConnectType = SmtpConnectType.ConnectTryTLS;
+                if ("ConnectSSLAuto".Equals(Configuration["EmailSettings:ConnectType"])) {
+                    obServer.ConnectType = SmtpConnectType.ConnectSSLAuto;
+                }
+                else if ("ConnectTryTLS".Equals(Configuration["EmailSettings:ConnectType"])) {
+                    obServer.ConnectType = SmtpConnectType.ConnectTryTLS;
+                }
+                else if ("ConnectDirectSSL".Equals(Configuration["EmailSettings:ConnectType"])) {
+                    obServer.ConnectType = SmtpConnectType.ConnectDirectSSL;
+                }
+                else if ("ConnectSTARTTLS".Equals(Configuration["EmailSettings:ConnectType"])) {
+                    obServer.ConnectType = SmtpConnectType.ConnectSTARTTLS;
+                }
+                else {
+                    obServer.ConnectType = SmtpConnectType.ConnectNormal;
+                }   
+
 
                 SmtpClient obClient = new SmtpClient();
                 await obClient.SendMailAsync(obServer, obCorreo);

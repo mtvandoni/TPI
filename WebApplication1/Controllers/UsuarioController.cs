@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using WebApplication1.DTO;
 using WebApplication1.Mail;
 using WebApplication1.Models;
@@ -20,11 +21,13 @@ namespace WebApplication1.Controllers
     {
         private readonly IJwtAuthenticationService _authService;
         private readonly TPI_DBContext context;
+        private readonly IConfiguration Configuration;
 
-        public UsuarioController(TPI_DBContext context, IJwtAuthenticationService authService)
+        public UsuarioController(TPI_DBContext context, IJwtAuthenticationService authService, IConfiguration configuration)
         {
              this.context = context;
             _authService = authService;
+            Configuration = configuration;
 
         }
 
@@ -112,8 +115,8 @@ namespace WebApplication1.Controllers
                     context.SaveChanges();
 
                     //Envio de mail
-                    EnviarMail enviar = new EnviarMail();
-                    Task<string> myTask = enviar.envio(persona.EmailUnlam, persona.Password);
+                    EnviarMail enviar = new EnviarMail(Configuration);
+                    Task<string> myTask = enviar.envio(persona.EmailUnlam, persona.Password, persona.Nombre, cursada.CodCursada);
                     string mensaje = myTask.Result;
 
                     if (mensaje.Equals("OK")) {
@@ -162,10 +165,17 @@ namespace WebApplication1.Controllers
                     context.SaveChanges();
 
                     //Envio de mail
-                    EnviarMail enviar = new EnviarMail();
-                    _ = enviar.envio(usuario.EmailUnlam, usuario.Password);
+                    EnviarMail enviar = new EnviarMail(Configuration);
+                    Task<string> myTask = enviar.envio(usuario.EmailUnlam, usuario.Password, usuario.Nombre, null);
 
-                    return Ok("Password cambiada exitosamente");
+                    string mensaje = myTask.Result;
+
+                    if (mensaje.Equals("OK")) {
+                        return Ok("Password renovada exitosamente");
+                    }
+                    else {
+                        return BadRequest("Error al enviar Mail : " + mensaje);
+                    }
                 }
                 else {
                     return BadRequest("Error el mail no se encuentra registrado en la base");
@@ -185,10 +195,17 @@ namespace WebApplication1.Controllers
                 if (usuario != null) {
 
                     //Envio de mail
-                    EnviarMail enviar = new EnviarMail();
-                    _ = enviar.envio(usuario.EmailUnlam, usuario.Password);
+                    EnviarMail enviar = new EnviarMail(Configuration);
+                    Task<string> myTask = enviar.envio(usuario.EmailUnlam, usuario.Password, usuario.Nombre, null);
 
-                    return Ok("Mail Reenviado al correo: " + usuario.EmailUnlam + " usuario: "+ usuario.Nombre);
+                    string mensaje = myTask.Result;
+
+                    if (mensaje.Equals("OK")) {
+                        return Ok("Mail Reenviado al correo: " + usuario.EmailUnlam + " usuario: " + usuario.Nombre);
+                    }
+                    else {
+                        return BadRequest("Error al enviar Mail : " + mensaje);
+                    }
                 }
                 else {
                     return BadRequest("Error el mail no se encuentra registrado en la base");

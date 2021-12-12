@@ -9,6 +9,7 @@ using WebApplication1.Models;
 using WebApplication1.DTO;
 using WebApplication1.Mail;
 using WebApplication1.Utils;
+using Microsoft.Extensions.Configuration;
 
 namespace WebApplication1.Controllers
 {
@@ -18,10 +19,12 @@ namespace WebApplication1.Controllers
     public class AltaMasivaUsuarios : ControllerBase
     {
         private readonly TPI_DBContext context;
+        private readonly IConfiguration Configuration;
 
-        public AltaMasivaUsuarios(TPI_DBContext context)
+        public AltaMasivaUsuarios(TPI_DBContext context, IConfiguration configuration)
         {
             this.context = context;
+            Configuration = configuration;
         }
 
         // POST api/<AltaMasivaUsuariosController>
@@ -42,8 +45,16 @@ namespace WebApplication1.Controllers
                         context.SaveChanges();
 
                         //Envio de mail
-                        EnviarMail enviar = new EnviarMail();
-                        _ = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password);
+                        EnviarMail enviar = new EnviarMail(Configuration);
+                        Task<string> myTask = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password, UsuarioNuevo.Nombre, cursada.CodCursada);
+                        string mensaje = myTask.Result;
+
+                        if (mensaje.Equals("OK")) {
+                            return Ok("integrantes Asignados correctamente");
+                        }
+                        else {
+                            return BadRequest("Error al enviar Mail : " + mensaje);
+                        }
                     }
                     else {
                         UsuarioNuevo.IdCursada = cursada.IdCursada;
@@ -54,8 +65,16 @@ namespace WebApplication1.Controllers
                         context.SaveChanges();
 
                         //Envio de mail
-                        EnviarMail enviar = new EnviarMail();
-                        _ = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password);
+                        EnviarMail enviar = new EnviarMail(Configuration);
+                        Task<string> myTask = enviar.envio(UsuarioNuevo.EmailUnlam, UsuarioNuevo.Password, UsuarioNuevo.Nombre, cursada.CodCursada);
+                        string mensaje = myTask.Result;
+
+                        if (mensaje.Equals("OK")) {
+                            return Ok("integrantes Asignados correctamente");
+                        }
+                        else {
+                            return BadRequest("Error al enviar Mail : " + mensaje);
+                        }
                     }
                 }catch (Exception ex) {
                     altaUsuariosFalla.Add(UsuarioNuevo);
