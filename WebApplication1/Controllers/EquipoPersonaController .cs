@@ -172,7 +172,7 @@ namespace WebApplication1.Controllers
             var persona = context.EquipoPersonas.FirstOrDefault(p => p.IdPersona == equipoPersona.IdPersona);
             var personas = from per in context.Personas
                            join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
-                           where equipoP.IdEquipo == equipoPersona.IdEquipo
+                           where equipoP.IdEquipo == persona.IdEquipo
                            select per;
 
             return Ok(personas);
