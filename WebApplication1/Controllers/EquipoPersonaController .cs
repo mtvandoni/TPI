@@ -167,9 +167,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet("RecuperarIntegrantes")]
-        public ActionResult RecuperarIntegrantes(int id)
+        public ActionResult RecuperarIntegrantes([FromBody] EquipoPersona equipoPersona)
         {
-            var persona = context.EquipoPersonas.FirstOrDefault(p => p.IdPersona == id);
+            var persona = context.EquipoPersonas.FirstOrDefault(p => p.IdPersona == equipoPersona.IdPersona);
             var personas = from per in context.Personas
                            join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
                            where equipoP.IdEquipo == persona.IdEquipo
