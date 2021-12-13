@@ -172,10 +172,10 @@ namespace WebApplication1.Controllers
             var persona = context.EquipoPersonas.FirstOrDefault(p => p.IdPersona == equipoPersona.IdPersona);
             var personas = from per in context.Personas
                            join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
-                           where equipoP.IdEquipo == persona.IdEquipo
+                           where equipoP.IdEquipo == equipoPersona.IdEquipo
                            select per;
 
-            return Ok(context.Personas.ToList());
+            return Ok(personas);
         }
 
         // DELETE api/<EquipoPersonaController>/5
