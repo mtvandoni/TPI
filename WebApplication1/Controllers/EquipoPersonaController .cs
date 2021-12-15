@@ -169,12 +169,21 @@ namespace WebApplication1.Controllers
         [HttpPost("RecuperarIntegrantes")]
         public ActionResult RecuperarIntegrantes([FromBody] EquipoPersona equipoPersona)
         {
-            var persona = context.EquipoPersonas.FirstOrDefault(p => p.IdPersona == equipoPersona.IdPersona);
-            var personas = from per in context.Personas
-                           join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
-                           where equipoP.IdEquipo == persona.IdEquipo
-                           select per;
+            try {
+                var persona = context.EquipoPersonas.FirstOrDefault(p => p.IdPersona == equipoPersona.IdPersona);
+                var equipo = context.EquipoPersonas.FirstOrDefault(p => p.IdEquipo == persona.IdEquipo);
+                if (equipo != null) {
+                    var personas = from per in context.Personas
+                                   join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
+                                   where equipoP.IdEquipo == persona.IdEquipo
+                                   select per;
             return Ok(personas);
+                }
+                return BadRequest("no tiene asiganado un equipo");
+            }
+            catch (Exception ex) {
+                return BadRequest("El equipo no existe");
+            }
         }
 
         // DELETE api/<EquipoPersonaController>/5
