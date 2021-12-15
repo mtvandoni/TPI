@@ -30,7 +30,25 @@ namespace WebApplication1.Controllers
         public ActionResult<string> Get()
         {
             try {
-                return Ok(context.Proyectos.ToList());
+                var proyectos = from pro in context.Proyectos
+                              join eq in context.Equipos on pro.IdProyecto equals eq.IdProyecto
+                              // join equiper in context.EquipoPersonas on eq.IdEquipo equals equiper.IdEquipo
+                              // join per in context.Personas on equiper.IdPersona equals per.Id
+                              join cat in context.Categoria on pro.IdCategoria equals cat.IdCategoria
+                              join tp in context.TipoProyects on pro.IdTipoProyecto equals tp.IdTipoProyecto
+                              select new {
+                                  idProyecto = pro.IdProyecto,
+                                  nombreEquipo = eq.Nombre,
+                                  nombreProyecto = pro.Nombre,
+                                  pro.Descripcion, pro.PropuestaValor, pro.Repositorio, pro.CantMeGusta, pro.RutaFoto, pro.RutaVideo,
+                                  pro.IdRed,
+                                  idTipoProyecto = pro.IdTipoProyecto,
+                                  categoria = cat.Descripcion,
+                                  tipoProyecto = tp.Descripcion,
+                                  estado = eq.Estado,
+                                  idEquipo = eq.IdEquipo,
+                              };
+                return Ok(proyectos);
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message);
@@ -136,6 +154,17 @@ namespace WebApplication1.Controllers
             catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("MasVotados")]
+        public ActionResult GetMasVotados()
+        {
+
+            var proyectos = (from pro in context.Proyectos
+                            orderby pro.CantMeGusta descending
+                            select pro).Take(3);
+
+            return Ok(proyectos);
         }
     }
 }

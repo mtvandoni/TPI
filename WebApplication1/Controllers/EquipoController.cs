@@ -117,5 +117,34 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // GET api/<EquipoController>/5
+        [HttpGet("getEquiposFull")]
+        public ActionResult GetEquiposFull()
+        {
+            var equipos = from pro in context.Proyectos
+                          join eq in context.Equipos on pro.IdProyecto equals eq.IdProyecto
+                          join equiper in context.EquipoPersonas on eq.IdEquipo equals equiper.IdEquipo
+                          join per in context.Personas on equiper.IdPersona equals per.Id
+                          select new {
+                              pro.IdProyecto,
+                              nombreEquipo = eq.Nombre,
+                              nombreProyecto = pro.Nombre,
+                              pro.Descripcion, pro.PropuestaValor, pro.Repositorio, pro.CantMeGusta, pro.RutaFoto, pro.RutaVideo,
+                              pro.IdRed,
+                              idTipoProyecto = pro.IdTipoProyecto,
+                              idCategoria = pro.IdCategoria,
+                              estado = eq.Estado,
+                              idEquipo = eq.IdEquipo,
+                              nombrePersona = per.Nombre,
+                              dniPersona = per.Dni,
+                              per.Email, per.EmailUnlam, per.Carrera, per.Edad,
+                              idPersona = per.Id
+                          };
+
+            return Ok(equipos);
+        }
+
     }
+
 }

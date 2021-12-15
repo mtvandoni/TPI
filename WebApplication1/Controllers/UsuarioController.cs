@@ -152,6 +152,7 @@ namespace WebApplication1.Controllers
         }
 
         // PUT api/<PersonaController>/5
+        [AllowAnonymous]
         [HttpPut("RecuperarPass")]
         public ActionResult RecuperarPass( [FromBody] Persona persona)
         {

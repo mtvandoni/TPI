@@ -166,7 +166,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        [HttpGet("RecuperarIntegrantes")]
+        [HttpPost("RecuperarIntegrantes")]
         public ActionResult RecuperarIntegrantes([FromBody] EquipoPersona equipoPersona)
         {
             var persona = context.EquipoPersonas.FirstOrDefault(p => p.IdPersona == equipoPersona.IdPersona);
@@ -174,8 +174,7 @@ namespace WebApplication1.Controllers
                            join equipoP in context.EquipoPersonas on per.Id equals equipoP.IdPersona
                            where equipoP.IdEquipo == persona.IdEquipo
                            select per;
-
-            return Ok(context.Personas.ToList());
+            return Ok(personas);
         }
 
         // DELETE api/<EquipoPersonaController>/5
